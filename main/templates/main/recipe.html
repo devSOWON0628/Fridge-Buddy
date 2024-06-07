@@ -1,0 +1,117 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="container">
+    <!-- 텍스트 -->
+    <h3 class="mb-4 mt-3">
+      I'll recommend <br>a delicious recipe for <span style="color: var(--brand-point-color);">{{ name }}</span>
+    </h3>
+
+    <div class="container">
+      <div class="row mb-1">
+        <!-- 음식 다이어트 리스트 -->
+        <select class="form-select" id="dietButtonGroup">
+          <option value="all" selected>All diets</option>
+        </select>
+      </div>
+      <div class="row">
+        <!-- 음식 퀴진 리스트 -->
+        <select class="form-select" id="cuisineButtonGroup">
+          <option value="all" selected>All cuisines</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 음식 리스트 -->
+    <div class="list-group my-4">
+      {% if not recipes|length %}
+      <h1> no result! </h1>
+      {% endif %}
+
+      {% for recipe in recipes %}
+        <a href="/recipes/detail/{{recipe.id}}" class="list-group-item list-group-item-action flex-column align-items-start" id="recipe_{{recipe.id}}"> 
+          <div class="d-flex w-100 justify-content-between mb-2">
+            <div class="row">
+              <div class="col-4 mt-1">
+                <img class="card-img-top rounded img-fluid" src="{{recipe.image}}" alt="Card image cap" />
+              </div>
+              <div class="col-8">
+                <p class="mb-1">{{recipe.title}}</p>
+                <small class="text-muted">you have {{recipe.usedIngredientCount}} ingredients </small>
+                <div id="detail_{{recipe.id}}">
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+<script type="text/javascript">
+  const recipes = {{recipes|safe}}
+  const recipesDetail = {{recipesDetail|safe}}
+
+  var cuisines = {}
+  var diets = {}
+  for(var i of recipesDetail) {
+    for(var cuisineName of i.cuisines) {
+      if(!Object.keys(cuisines).includes(cuisineName)) {
+        cuisines[cuisineName] = [i.id];
+      } else {
+        cuisines[cuisineName].push(i.id);
+      }
+    }
+
+    for(var dietName of i.diets) {
+      if(!Object.keys(diets).includes(dietName)) {
+        diets[dietName] = [i.id]
+      } else {
+        diets[dietName].push(i.id)
+      }
+    }
+  }
+
+  for (const key in diets) {
+    $("#dietButtonGroup").append(`
+      <option value="${key}">${key} (${diets[key].length})</option>
+    `)
+  }
+
+  for (const key in cuisines) {
+    $("#cuisineButtonGroup").append(`
+      <option value="${key}">${key} (${cuisines[key].length})</option>
+    `)
+  }
+
+  $("#cuisineButtonGroup").change(function() {
+    $("#dietButtonGroup").val('all')
+    const value = $(this).val()
+    if(value == 'all') {
+      $(".list-group-item").show()
+    } else {
+      $(".list-group-item").hide()
+      for(let i of cuisines[value]) {
+        $("#recipe_"+i).show()
+      }
+    }
+  })
+
+  $("#dietButtonGroup").change(function() {
+    $("#cuisineButtonGroup").val('all')
+    const value = $(this).val()
+    if(value == 'all') {
+      $(".list-group-item").show()
+    } else {
+      $(".list-group-item").hide()
+      for(let i of diets[value]) {
+        $("#recipe_"+i).show()
+      }
+    }
+  })
+  
+
+
+</script>
+{% endblock %}
+
+

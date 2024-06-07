@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="container px-4">
+    <!-- 텍스트 -->
+    <h3 class="my-4 text-left">Please choose your <br>cooking category!</h3>
+    <button class="btn point-button btn-sm" type="button" id="recipesButton">search recipes <i class="bi bi-arrow-right mx-1"></i></button>
+
+    <!-- 텍스트 -->
+    <p class="my-4">
+      <h4 style="color: var(--brand-point-color);">Cuisine</h4>
+    </p>
+    <div class="text-left">
+      {% for cuisine in cuisines %}
+        <button class="btn btn-outline-light rounded-pill px-3 my-1 btn-sm active" type="button" disabled>{{ cuisine }}</button>
+      {% endfor %}
+    </div>
+    <p class="my-4">
+      <h4 style="color: var(--brand-point-color);">Diet</h4>
+      {% for diet in diets %}
+        <button class="btn btn-outline-light rounded-pill px-3 my-1 btn-sm active" type="button">{{ diet }}</button>
+      {% endfor %}
+    </p>
+  </div>
+  <script>
+    let cuisineList = []
+    let dietList = []
+    cuisineList.push('korean')
+    cuisineList.push('Asian')
+    dietList.push('Vegetarian')
+    $("#recipesButton").click(function() {
+      location.href= '/recipes'
+    })
+
+    $(".rounded-pill").click(function() {
+      print("click")
+      if($(this).hasClass('btn-outline-warning')) {
+        $(this).removeClass("btn-outline-warning")
+        $(this).addClass("point-button")
+      } else {
+        $(this).addClass("btn-outline-warning")
+        $(this).removeClass("point-button")
+      }
+    })
+  </script>
+{% endblock %}

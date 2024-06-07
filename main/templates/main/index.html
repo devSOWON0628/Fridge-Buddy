@@ -1,0 +1,30 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'style/bootstrap.min.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'style/style.css' %}" />
+<link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+  </head>
+  <body>
+    <div class="container fill text-center align-items-center" style="align-content: center;">
+      <div class="row align-items-center">
+        <div class="title mb-5">
+          <h1 class="display-1">오냉요</h1>
+          <p class="mt-1" style="color: var(--brand-blue-dark);">
+            <b style="color: var(--brand-point-color);">오</b>늘의
+            <b style="color: var(--brand-point-color);">냉</b>장고
+            <b style="color: var(--brand-point-color);">요</b>리
+          </p>
+        </div>
+        <div class="d-grid gap-3 mt-5">
+          <a class="btn point-button py-2 mx-4 shadow" type="button" href="/ingredients">Fridge foraging</a>
+          <a class="btn point-button py-2 mx-4 shadow" type="button" href="/recipes">Recipes</a>
+        </div>
+      </div> <!-- end of content -->
+    </div> <!-- end of container -->
+  </body>
+</html>

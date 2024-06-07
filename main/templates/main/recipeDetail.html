@@ -1,0 +1,48 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="container px-4">
+    <!-- 텍스트 -->
+    <p class="my-4">
+      <h1 style="color: var(--brand-point-color);" class="mb-4"><b>{{ recipeData.title }}</b></h1>
+      <img src="{{recipeData.image}}" class="img-fluid" alt="Responsive image">
+    </p>
+    
+    {% for diet in recipeData.diets %}
+      <span class="badge bg-success badge-pill my-1">{{diet}}</span>
+    {% endfor %}
+    {% for cuisine in recipeData.cuisines %}
+      <span class="badge bg-primary badge-pill my-1">{{cuisine}}</span>
+    {% endfor %}
+
+    <div class="ingredient my-3">
+      <h3 style="color: var(--brand-point-color);">Ingredients</h3>
+      <ul class="list-group">
+        {% for ingredient in recipeData.extendedIngredients %}
+        <li class="list-group-item">
+          {{ ingredient.original }}
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- 텍스트 -->
+    <p class="my-4">
+      <h3 style="color: var(--brand-point-color);">Recipe detail</h3>
+    </p>
+    <!-- 레시피 detail -->
+    <div class="container">
+      {% for recipeStep in recipeData.analyzedInstructions.0.steps %}
+        <div class="row px-0">
+          <div class="callout-primary callout">
+            <h5 style="color: var(--brand-point-color);">{{recipeStep.number}}.</h5> {{ recipeStep.step }}
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- end of container -->
+
+<script>
+  {% comment %} const recipeData = {{recipeData|safe}} {% endcomment %}
+</script>
+{% endblock %}

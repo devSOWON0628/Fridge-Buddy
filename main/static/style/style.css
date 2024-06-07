@@ -1,0 +1,105 @@
+@font-face {
+    font-family: 'Gosanja';
+    font-style: 'normal';
+    font-weight: 400;
+    src: url('../font/GosanjaOTF.otf'); 
+    src: url('../font/GosanjaOTF.otf') format('embedded-opentype'),
+         url('../font/GosanjaOTF.otf') format('woff2'),
+         url('../font/GosanjaOTF.otf') format('woff'),
+         url('../font/GosanjaOTF.otf') format('truetype'), 
+         url('../font/GosanjaOTF.otf') format('svg'); 
+}
+
+@font-face {
+    font-family: 'theJUNGJICK';
+    font-style: 'normal';
+    font-weight: 400;
+    src: url('../font/theJUNGJICK.ttf');
+    src: url('../font/theJUNGJICK.ttf') format('embedded-opentype'),
+         url('../font/theJUNGJICK.ttf') format('woff2'),
+         url('../font/theJUNGJICK.ttf') format('woff'),
+         url('../font/theJUNGJICK.ttf') format('truetype'),
+         url('../font/theJUNGJICK.ttf') format('svg');
+}
+
+@font-face {
+    font-family: 'notosans';
+    font-style: 'normal';
+    font-weight: 400;
+    src: url('../font/NotoSansKR-VariableFont_wght.ttf');
+    src: url('../font/NotoSansKR-VariableFont_wght.ttf') format('embedded-opentype'),
+         url('../font/NotoSansKR-VariableFont_wght.ttf') format('woff2'),
+         url('../font/NotoSansKR-VariableFont_wght.ttf') format('woff'),
+         url('../font/NotoSansKR-VariableFont_wght.ttf') format('truetype'),
+         url('../font/NotoSansKR-VariableFont_wght.ttf') format('svg');
+}
+
+@font-face {
+  font-family: 'opensans';
+  font-style: 'normal';
+  font-weight: 600;
+  src: url('../font/opensans.ttf');
+  src: url('../font/opensans.ttf') format('embedded-opentype'),
+       url('../font/opensans.ttf') format('woff2'),
+       url('../font/opensans.ttf') format('woff'),
+       url('../font/opensans.ttf') format('truetype'),
+       url('../font/opensans.ttf') format('svg');
+}
+.fill { 
+    min-height: 100%;
+    height: 100%;   
+}
+.title {
+    font-family: 'Gosanja';
+    color: var(--brand-point-color);
+}
+body {
+    font-family: 'opensans';
+}
+
+:root {	
+	--brand-main-color: #ffb703;
+	--brand-point-color: #fb8500;
+    --brand-blue-light: #8ecae6;
+    --brand-blue-dark: #219ebc;
+    --brand-blue-deep: #023047
+}
+
+.point-button{
+    background-color: var(--brand-point-color); 
+    color: white;
+}
+
+.blue-button{
+  background-color: var(--brand-blue-dark); 
+  color: white;
+}
+
+.callout {
+    padding: 20px;
+    margin: 20px 0;
+    border: 1px solid #eee;
+    border-left-width: 5px;
+    border-radius: 3px;
+    h4 {
+      margin-top: 0;
+      margin-bottom: 5px;
+    }
+    p:last-child {
+      margin-bottom: 0;
+    }
+    code {
+      border-radius: 3px;
+    }
+    & + .bs-callout {
+      margin-top: -5px;
+    }
+  }
+  @each $name,$color in (default,#777),(primary,#428bca),(success,#5cb85c),(danger,#d9534f),(warning,#f0ad4e),(info,#5bc0de), (bdc,#29527a) {
+    .callout-#{$name} {
+      border-left-color: $color;
+      h4 {
+        color: $color;
+      }
+    }
+  }

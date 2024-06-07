@@ -1,0 +1,178 @@
+{% extends 'layout.html' %}
+{% block content %}
+  <div class="container">
+    <!-- 텍스트 -->
+    <h3 class="my-4">
+      Enter your
+      <span style="color: var(--brand-point-color);">fridge ingredients</span>,
+      <br>and I'll suggest a tasty recipe!
+    </h3>
+    
+    <!-- 재료 추가 input -->
+    <form id="addIngredientForm" class="text-center">
+      <div class="input-group row mx-auto">
+        <div class="col-4 px-0">
+          <input type="text" class="form-control" placeholder="carrots" aria-label="재료명" name="name" id="ingredientNameInput"/>
+        </div>
+        <div class="col-3 px-0">
+          <input type="number" class="form-control" placeholder="30" aria-label="재료양" name="amount" id="ingredientAmountInput"/>
+        </div>
+        <div class="col-3 px-0">
+          <select class="form-select form-control" aria-label="Default select example" name="unit" id="ingerdientUnitInput">
+            <option value="0" selected>g</option>
+            <option value="1">EA</option> 
+          </select>
+        </div>
+        <div class="input-group-append col-2 px-0 d-grid">
+          <button class="btn point-button btn-lg" type="button" id="ingredientAddBtn"><i class="bi bi-plus"></i></button>
+        </div>
+      </div>
+    </form>
+    <!-- 재료 카드 -->
+    <div class="container mt-4 px-2" id="cardsContainer">
+      {% for ingredient in ingredients %} 
+      {% if forloop.counter0|divisibleby:3 %}
+      <div class="row my-2">
+        {% endif %}
+        <div class="col-4 px-2">
+          <div class="card shadow-sm py-2 px-1 h-100" id="ingredientCard_{{forloop.counter0}}_{{ingredient.id}}">
+            <i class="bi bi-x-lg deleteIngredientButton" id="deleteIngredientButton_{{ingredient.id}}"></i>
+            <img class="card-img-top" src="{{ingredient.imgUrl}}" alt="Card image cap"  style="height: 100px;"/>
+            <div class="card-body px-2">
+              <p class="card-title">{{ingredient.name}}</p>
+              <p class="card-text">{{ingredient.amount}}
+                {% if ingredient.unit == 0 %}
+                g 
+                {% else %}
+                EA
+                {% endif %}
+              </p>
+            </div> <!-- end of card-body-->
+          </div> <!--end of card-->
+        </div> <!-- end of col -->
+        {% if forloop.counter|divisibleby:3 %}
+      </div> <!-- end of row  -->
+      {% endif %}
+      {% endfor %}
+    </div> <!-- end of 재료 card container-->
+
+    <!-- Modal -->
+    <div class="modal fade" id="ingredientDetailModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">재료 수정</h5>
+            <i class="bi bi-x" class="close" data-dismiss="modal" aria-label="Close"></i>
+          </div>
+          <div class="modal-body">
+            <div class="row my-2">
+              <div class="col">
+                <input type="text" class="form-control" id="ingredientName"/>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-9">
+                <input type="number" class="form-control" id="ingredientAmount"/>
+              </div>
+              <div class="col-3">
+                <select id="ingredientAmounUnitSelect" class="form-control">
+                  <option selected value="0">g</option>
+                  <option value="1">EA</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn point-button" id="ingredientDetailModalSaveBtn">저장</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div> <!-- end of container -->
+  <script type="text/javascript">
+    const ingredients = {{ingredients|safe}}
+    let nowCardIndex;
+    clearModal()
+    $('.card').click(function (obj) {
+      $('#ingredientDetailModal').modal('show')
+
+      const index = $(this).attr("id").split("_")[1]
+      nowCardIndex = $(this).attr("id").split("_")[2]
+      setDataModal(ingredients[index])
+    })
+    
+    // 수정 저장
+    $('#ingredientDetailModalSaveBtn').click(function() {
+      data = {
+        'name' : $("#ingredientName").val(),
+        'amount' : $("#ingredientAmount").val(),
+        'unit' : $("#ingredientAmounUnitSelect").val(),
+        'id' : nowCardIndex
+      }
+      
+      $.ajax({
+        type:'PUT',
+        url:'http://localhost:8000/api/ingredient',
+        data: JSON.stringify(data),
+        success:function(json){
+          $('#ingredientDetailModal').modal('hide')
+          clearModal()
+          location.reload()
+        },
+        error : function(xhr,errmsg,err) {
+          console.log(xhr.status + ": " + xhr.responseText); 
+        }
+      });
+    })
+
+    $("#ingredientAddBtn").click(function() {
+      const data = {
+        "name" : $("#ingredientNameInput").val(),
+        "amount" : $("#ingredientAmountInput").val(),
+        "unit" : $("#ingerdientUnitInput").val()
+      }
+      console.log(data);
+      $.ajax({
+        type:'POST',
+        url:'http://localhost:8000/api/ingredient',
+        data: JSON.stringify(data),
+        success:function(json){
+          location.reload()
+        },
+        error : function(xhr,errmsg,err) {
+          console.log(xhr.status + ": " + xhr.responseText); 
+        }
+      });
+    })
+
+    function setDataModal(data) {
+      $("#ingredientName").val(data.name)
+      $("#ingredientAmount").val(data.amount)
+      $("#ingredientAmounUnitSelect").val(data.unit)
+    }
+
+    function clearModal() {
+      $("#ingredientName").val('')
+      $("#ingredientAmount").val(0)
+      $("#ingredientAmounUnitSelect").val(0)
+      nowCardIndex=-1
+    }
+
+    $(".deleteIngredientButton").click(function() {
+      const ingredientId = $(this).attr('id').split("_")[1]
+      
+      $.ajax({
+        type:'DELETE',
+        url:'http://localhost:8000/api/ingredient',
+        data: JSON.stringify({"ingredientId" : ingredientId}),
+        success:function(json){
+          location.reload()
+        },
+        error : function(xhr,errmsg,err) {
+          console.log(xhr.status + ": " + xhr.responseText); 
+        }
+      });
+    })
+    
+  </script>
+{% endblock %}
